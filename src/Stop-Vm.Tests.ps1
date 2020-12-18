@@ -2,100 +2,49 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
 
     $testDate = Get-Date -Hour 12
-
-    $test_VMS_to_stop = @( 
-        @{
-            Name              = "Test VM"
-            ResourceGroupName = "test_vm"
-            Tags              = @{
-                'ManuallyStopped'     = 'False'
-                'PowerOffDisabled'    = 'False'
-                'PowerOnOffUTCOffset' = 1
-                'PowerOffTime'        = '10:00'
-                'PowerOnTime'         = '08:00'
-            }
-            PowerState        = "VM running"
-
-        },
-        @{
-            Name              = "Test VM 2"
-            ResourceGroupName = "test_vm"
-            Tags              = @{
-                'ManuallyStopped'     = 'False'
-                'PowerOffDisabled'    = 'False'
-                'PowerOnOffUTCOffset' = 1
-                'PowerOffTime'        = '10:00'
-                'PowerOnTime'         = '08:00'
-            }
-            PowerState        = "VM running"
-        })
-
-    $test_vms_to_NOT_stop = @(
-        @{
-            Name              = "Test VM that stop later"
-            ResourceGroupName = "test_vm"
-            Tags              = @{
-                'ManuallyStopped'     = 'False'
-                'PowerOffDisabled'    = 'False'
-                'PowerOnOffUTCOffset' = 0
-                'PowerOffTime'        = '14:00'
-                'PowerOnTime'         = '06:00'
-            }
-            PowerState        = "VM running"
-
-        },
-        @{
-            Name              = "Test VM that poweroff disabled"
-            ResourceGroupName = "test_vm"
-            Tags              = @{
-                'ManuallyStopped'     = 'False'
-                'PowerOffDisabled'    = 'True'
-                'PowerOnOffUTCOffset' = 1
-                'PowerOffTime'        = '12:00'
-                'PowerOnTime'         = '06:00'
-            }
-            PowerState        = "VM running"
-        }
-    )
-
-    $test_vms_unaffected = @(
-        @{
-            Name              = "Test VM that is running"
-            ResourceGroupName = "test_vm"
-            Tags              = @{
-                'ManuallyStopped'     = 'False'
-                'PowerOffDisabled'    = 'False'
-                'PowerOnOffUTCOffset' = 1
-                'PowerOffTime'        = '10:00'
-                'PowerOnTime'         = '08:00'
-            }
-            PowerState        = "VM deallocated"
-        },
-        @{
-            Name              = "Test VM that is deallocated and has no tags"
-            ResourceGroupName = "test_vm"
-            Tags              = @{}
-            PowerState        = "VM running"
-        },
-        @{
-            Name              = "Test VM that is running and has no tags"
-            ResourceGroupName = "test_vm"
-            Tags              = @{}
-            PowerState        = "VM deallocated"
-        }
-    )
 }
 Describe "Stop-AzVM" {
     BeforeAll {
         Mock Get-Date { $testDate }  -ParameterFilter { $date -eq $null }
     }
 
-    Context "VMs that should start" {
+    Context "VMs that should start"  -Foreach @(
+        @{
+            testcase = @( 
+                @{
+                    Name              = "Test VM"
+                    ResourceGroupName = "test_vm"
+                    Tags              = @{
+                        'ManuallyStopped'     = 'False'
+                        'PowerOffDisabled'    = 'False'
+                        'PowerOnOffUTCOffset' = 1
+                        'PowerOffTime'        = '10:00'
+                        'PowerOnTime'         = '08:00'
+                    }
+                    PowerState        = "VM running"
+
+                },
+                @{
+                    Name              = "Test VM 2"
+                    ResourceGroupName = "test_vm"
+                    Tags              = @{
+                        'ManuallyStopped'     = 'False'
+                        'PowerOffDisabled'    = 'False'
+                        'PowerOnOffUTCOffset' = 1
+                        'PowerOffTime'        = '10:00'
+                        'PowerOnTime'         = '08:00'
+                    }
+                    PowerState        = "VM running"
+                }
+            ) 
+        }
+
+    ) {
         BeforeEach {
             Mock Stop-AzVM -Verifiable { $true }
           
             Mock Get-AzVM { 
-                return $test_VMS_to_stop
+                return $testcase
             }
             $result = Stop-Vm
         }
@@ -106,13 +55,71 @@ Describe "Stop-AzVM" {
     }
 
 
-    Context "VMs that should not stop" {
+    Context "VMs that should not stop"   -Foreach @(
+        @{
+            testcase = @( 
+                @{
+                    Name              = "Test VM that stop later"
+                    ResourceGroupName = "test_vm"
+                    Tags              = @{
+                        'ManuallyStopped'     = 'False'
+                        'PowerOffDisabled'    = 'False'
+                        'PowerOnOffUTCOffset' = 0
+                        'PowerOffTime'        = '14:00'
+                        'PowerOnTime'         = '06:00'
+                    }
+                    PowerState        = "VM running"
+
+                },
+                @{
+                    Name              = "Test VM that poweroff disabled"
+                    ResourceGroupName = "test_vm"
+                    Tags              = @{
+                        'ManuallyStopped'     = 'False'
+                        'PowerOffDisabled'    = 'True'
+                        'PowerOnOffUTCOffset' = 1
+                        'PowerOffTime'        = '12:00'
+                        'PowerOnTime'         = '06:00'
+                    }
+                    PowerState        = "VM running"
+                }
+            ) 
+        },
+        @{
+            testcase = @(
+                @{
+                    Name              = "Test VM that is running"
+                    ResourceGroupName = "test_vm"
+                    Tags              = @{
+                        'ManuallyStopped'     = 'False'
+                        'PowerOffDisabled'    = 'False'
+                        'PowerOnOffUTCOffset' = 1
+                        'PowerOffTime'        = '10:00'
+                        'PowerOnTime'         = '08:00'
+                    }
+                    PowerState        = "VM deallocated"
+                },
+                @{
+                    Name              = "Test VM that is deallocated and has no tags"
+                    ResourceGroupName = "test_vm"
+                    Tags              = @{}
+                    PowerState        = "VM running"
+                },
+                @{
+                    Name              = "Test VM that is running and has no tags"
+                    ResourceGroupName = "test_vm"
+                    Tags              = @{}
+                    PowerState        = "VM deallocated"
+                }
+            )
+        }
+    ) {
 
         BeforeEach {
             Mock Stop-AzVM -Verifiable { $true }
 
             Mock Get-AzVM { 
-                return $test_vms_unaffected + $test_vms_to_NOT_stop
+                return $testcase
             }
             $result = Stop-Vm
         }
