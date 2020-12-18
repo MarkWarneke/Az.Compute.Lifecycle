@@ -30,6 +30,8 @@ make run
 ## Automation
 
 You can use an Azure logic app to start the Dockerfile as a Azure Container Instance.
+The Azure Container Instance can be associated with a User Assigned Managed Identity to take care of the authentication & authorization.
+Make sure the Managed Identity Principal has proper Role Based Access Controle on the Azure resources to be managed.
 
 ## life cycle methods
 
