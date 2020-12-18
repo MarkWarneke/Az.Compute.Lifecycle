@@ -1,8 +1,11 @@
-# PWSH
+# Az.Compute.Lifecycle ![CI](https://github.com/MarkWarneke/Az.Compute.Lifecycle/workflows/CI/badge.svg)
 
-using [mcr.microsoft.com/azure-powershell:latest](https://hub.docker.com/_/microsoft-azure-powershell)
+Create a solution to save costs for dev environments e.g.
 
-# Description
+- automatic shutdown of VMSS during evenings & weekends for dev/tests
+- automatic scaling of VMSS to reduce to smaller footprint and save costs
+
+Create an executable that to certain times deallocate compute resources and start them again.
 
 Use the run command to execute the functionality.
 To start the VMs run:
@@ -18,13 +21,17 @@ to stop the vms run:
 ./run.ps1 -stop 
 ```
 
-You can alos use the provided `Makefile`
+You can also use the provided `Makefile`
 
 ```bash
 make run
 ```
 
-# Life cycle methods
+## Automation
+
+You can use an Azure logic app to start the Dockerfile as a Azure Container Instance.
+
+## life cycle methods
 
 Uses a couple of tags to start or stop vms.
 Use `Set-Tags` to create the tags on a given vm.
@@ -53,3 +60,7 @@ Get-Help Set-Tags
 Get-Help Start-Vm
 Get-Help Stop-Vm
 ```
+
+## Docker
+
+Using [mcr.microsoft.com/azure-powershell:latest](https://hub.docker.com/_/microsoft-azure-powershell)
