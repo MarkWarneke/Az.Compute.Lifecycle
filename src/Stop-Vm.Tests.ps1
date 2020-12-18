@@ -8,7 +8,7 @@ Describe "Stop-AzVM" {
         Mock Get-Date { $testDate }  -ParameterFilter { $date -eq $null }
     }
 
-    Context "VMs that should start"  -Foreach @(
+    Context "given VMS that should start"  -Foreach @(
         @{
             testcase = @( 
                 @{
@@ -55,7 +55,7 @@ Describe "Stop-AzVM" {
     }
 
 
-    Context "VMs that should not stop"   -Foreach @(
+    Context "given VMs that should not stop"   -Foreach @(
         @{
             testcase = @( 
                 @{

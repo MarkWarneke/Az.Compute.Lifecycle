@@ -11,7 +11,7 @@ Describe "Start-Vm" {
         Mock Get-Date { $testDate }  -ParameterFilter { $date -eq $null }
     }
 
-    Context "VMs that should start" -Foreach @(
+    Context "given VMs that should start" -Foreach @(
         @{
             testcase = @( 
                 @{
@@ -20,7 +20,7 @@ Describe "Start-Vm" {
                     Tags              = @{
                         'ManuallyStopped'     = 'False'
                         'PowerOffDisabled'    = 'False'
-                        'PowerOnOffUTCOffset' = 1
+                        'PowerOnOffUTCOffset' = 0
                         'PowerOffTime'        = '10:00'
                         'PowerOnTime'         = '08:00'
                     }
@@ -33,7 +33,7 @@ Describe "Start-Vm" {
                     Tags              = @{
                         'ManuallyStopped'     = 'False'
                         'PowerOffDisabled'    = 'False'
-                        'PowerOnOffUTCOffset' = 1
+                        'PowerOnOffUTCOffset' = 0
                         'PowerOffTime'        = '10:00'
                         'PowerOnTime'         = '08:00'
                     }
@@ -58,7 +58,7 @@ Describe "Start-Vm" {
     }
 
 
-    Context "VMs that should not start"  -Foreach @(
+    Context "given VMs that should not start"  -Foreach @(
         @{
             testcase = @(
                 @{
