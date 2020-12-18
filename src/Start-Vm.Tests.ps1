@@ -99,13 +99,14 @@ BeforeAll {
 Describe "Start-Vm" {
 
     BeforeAll {
-        Mock Start-AzVM  -Verifiable { $true }
+      
         Mock Get-Date { $testDate }  -ParameterFilter { $date -eq $null }
     }
 
     Context "VMs that should start" {
 
         BeforeEach {
+            Mock Start-AzVM  -Verifiable { $true }
             Mock Get-AzVM { 
                 return $test_VMS_to_start
             }
@@ -121,6 +122,7 @@ Describe "Start-Vm" {
     Context "VMs that should not start" {
 
         BeforeEach {
+            Mock Start-AzVM  -Verifiable { $true }
             Mock Get-AzVM { 
                 return $test_vms_unaffected + $test_vms_to_NOT_start
             }
@@ -134,7 +136,7 @@ Describe "Start-Vm" {
         It "should check time" {
             # Run the get-date (whithin the loop for all VMS that pass the Where-Object filter)
             $times = ($test_VMS_to_start.Length + $test_vms_to_NOT_start.Length) * 3 + $test_vms_unaffected.Length * 0
-            Assert-MockCalled Get-Date -Exactly $times
+            Assert-MockCalled Get-Date -Exactly 14 # $times
         }
     }
 
