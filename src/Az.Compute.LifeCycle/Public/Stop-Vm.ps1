@@ -63,37 +63,13 @@ function Stop-Vm {
 
             $Time = Get-TimeFromTags -Tags $VM.Tags
 
-            # Get Tags
-            $VMTags = $VM.Tags
-            $UTCOffset = [INT]$VMTags['PowerOnOffUTCOffset'] * -1
-            $LocalStopString = $VMTags['PowerOffTime']
-            Write-Verbose "[$(Get-Date)] UTC Offset of $($VM.Name) is $UTCOffset"
-            # Determine UTC Shut Down Time
-            $LocalStopTime = Get-Date $LocalStopString
-            $UTCStopTime = $LocalStopTime.AddHours($UTCOffset)
-            # Remove 24h and 5 Minutes to avoid 00:00 / midnight when UTC Offset is set to -5h or more (USA)
-            $ActualCheckDate = Get-Date
-            if ($UTCOffset -ge 5 -and $ActualCheckDate -ge (Get-Date "00:00:01") -and $ActualCheckDate -le (Get-Date "10:00")) {
-                $UTCStopTime = $UTCStopTime.AddMinutes(-1445)
-            }
-            Write-Verbose "[$(Get-Date)] Stop Time (UTC) of $($VM.Name) is $UTCStopTime"
-
+            $UTCStopTime = $Time.UTCStopTime
             $UTCTimeActual = $Time.UTCTimeActual
-            Write-Verbose "[$(Get-Date)] Actual Time (UTC) is $UTCTimeActual"
-            # Get Date for Date exclusions
-            $UTCOffsetDate = [INT]$VMTags['PowerOnOffUTCOffset']
-            [STRING]$ShutDownExclusion = $VMTags['PowerOffExcludeDates']
-            if (!$ShutDownExclusion) {
-                [DateTime]$ShutDownExclusionFormated = "01/01/1990"
-            }
-            else {
-                [DateTime]$ShutDownExclusionFormated = $ShutDownExclusion
-            }
-            $ActualOffsetDate = (Get-Date).AddHours($UTCOffsetDate)
-            $ActualOffsetDateFormated = Get-Date -Date $ActualOffsetDate -Format "MM/dd/yyyy"
-            $ShutDownDateExclusionFormated = Get-Date -Date $ShutDownExclusionFormated -Format "MM/dd/yyyy"
-            $ShutDownDate = (Get-Date -Date $ShutDownExclusionFormated).AddHours(25)
-            $ShutDownDateFormated = Get-Date -Date $ShutDownDate -Format "MM/dd/yyyy"
+
+            $ActualOffsetDateFormated = $Time.ActualOffsetDateFormated
+            $ShutDownDateExclusionFormated = $Time.ShutDownDateExclusionFormated
+            $ShutDownDateFormated = $Time.ShutDownDateFormated
+
             if ($ActualOffsetDateFormated -gt $ShutDownDateFormated -or $ActualOffsetDateFormated -lt $ShutDownDateExclusionFormated) {
                 if ($UTCTimeActual -ge $UTCStopTime) {
                     Write-Verbose "[$(Get-Date)] Shutting down VM: $($VM.Name)"
@@ -106,7 +82,7 @@ function Stop-Vm {
                 }
             }
             else {
-                Write-Verbose "[$(Get-Date)] $($VM.Name) is not planned for Shut Down as exclusion is set for $ShutDownExclusionFormated"
+                Write-Verbose "[$(Get-Date)] $($VM.Name) is not planned for Shut Down as exclusion is set for ${$Time.ShutDownExclusionFormated}"
             }
         }
     }
