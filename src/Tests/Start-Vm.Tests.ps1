@@ -44,10 +44,10 @@ InModuleScope $ModuleName {
         ) {
 
             BeforeEach {
-                Mock Start-AzVM  -Verifiable { $true }  -ModuleName 'Az.Compute.LifeCycle'
+                Mock Start-AzVM  -Verifiable { $true }
                 Mock Get-AzVM {
                     return $testcase
-                }  -ModuleName 'Az.Compute.LifeCycle'
+                }  -Verifiable { $true }
                 $result = Start-Vm
             }
 
@@ -128,10 +128,10 @@ InModuleScope $ModuleName {
             }
         ) {
             BeforeEach {
-                Mock Start-AzVM  -Verifiable { $true }  -ModuleName 'Az.Compute.LifeCycle'
+                Mock Start-AzVM  -Verifiable { $true }
                 Mock Get-AzVM {
                     return $testcase
-                }  -ModuleName 'Az.Compute.LifeCycle'
+                }
                 $result = Start-Vm
             }
             It "should not start vm" {
