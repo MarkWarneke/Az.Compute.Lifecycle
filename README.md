@@ -53,8 +53,10 @@ After that the life cycle activities will `Start-Vm` or `Stop-Vm` based on the t
 ## Help
 
 ```powershell
+$ModuleName = 'Az.Compute.LifeCycle'
+Import-Module (Join-Path 'src' $ModuleName -Resolve) -Force
 
-Import-Module (Join-Path $PSScriptRoot 'src' 'Az.Compute.LifeCycle') -Force
+Get-Command -Module $ModuleName
 
 Get-Help Set-Tags
 Get-Help Start-Vm
