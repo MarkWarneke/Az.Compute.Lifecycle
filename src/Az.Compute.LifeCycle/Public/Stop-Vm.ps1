@@ -76,9 +76,8 @@ function Stop-Vm {
                 $UTCStopTime = $UTCStopTime.AddMinutes(-1445)
             }
             Write-Verbose "[$(Get-Date)] Stop Time (UTC) of $($VM.Name) is $UTCStopTime"
-            # Get actual UTC Time
-            $Datetime = Get-Date
-            $UTCTimeActual = $Datetime.ToUniversalTime()
+
+            $UTCTimeActual = $Time.UTCTimeActual
             Write-Verbose "[$(Get-Date)] Actual Time (UTC) is $UTCTimeActual"
             # Get Date for Date exclusions
             $UTCOffsetDate = [INT]$VMTags['PowerOnOffUTCOffset']
