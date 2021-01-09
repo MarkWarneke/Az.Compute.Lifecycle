@@ -7,4 +7,5 @@
         POWER_OFF          = 'PowerOffTime'
     }
     VM_DEALLOCATED = 'VM deallocated'
+    VM_RUNNING = "VM running"
 }

@@ -48,12 +48,20 @@ function Stop-Vm {
 
     begin {
         Write-Verbose "[$(Get-Date)] Begin Stop-VM"
+         $F = 'False*'
     }
 
     process {
         #Get all VMs that are eligable for Shut Down
-        $VMs = Get-AzVM -Status | Where-Object { $PSITEM.Tags.Keys -eq "PowerOffDisabled" -and $PSITEM.Tags['PowerOffDisabled'] -like "False*" -and $PSITEM.PowerState -eq "VM running" }
+        $VMs = Get-AzVM -Status | Where-Object {
+            $PSITEM.Tags.Keys -eq $script:CONFIG.TAGS.POWER_OFF_DISABLED -and
+            $PSITEM.Tags[$script:CONFIG.TAGS.POWER_OFF_DISABLED] -like $F -and
+            $PSITEM.PowerState -eq $script:CONFIG.VM_RUNNING
+        }
         ForEach ($VM in $VMs) {
+
+            $Time = Get-TimeFromTags -Tags $VM.Tags
+
             # Get Tags
             $VMTags = $VM.Tags
             $UTCOffset = [INT]$VMTags['PowerOnOffUTCOffset'] * -1
