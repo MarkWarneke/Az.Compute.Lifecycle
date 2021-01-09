@@ -48,6 +48,7 @@ function Start-Vm {
 
     begin {
         Write-Verbose "[$(Get-Date)] Begin Start-VM"
+        $TAGS = [PSCustomObject] $script:CONFIG.Tags
         $F = 'False*'
     }
 
@@ -55,8 +56,8 @@ function Start-Vm {
         #Get all VMs that are eligable for Shut Down
         $VMs = Get-AzVM -Status |
         Where-Object {
-            $PSITEM.Tags[$script:CONFIG.TAGS.MANUAL_STOP] -like $F -and
-            $PSITEM.Tags[$script:CONFIG.TAGS.POWER_OFF_DISABLED] -like $F -and
+            $PSITEM.Tags[$TAGS.MANUAL_STOP] -like $F -and
+            $PSITEM.Tags[$TAGS.POWER_OFF_DISABLED] -like $F -and
             $PSITEM.PowerState -eq $script:CONFIG.VM_DEALLOCATED
         }
 
