@@ -21,10 +21,17 @@ to stop the vms run:
 ./run.ps1 -stop
 ```
 
-You can also use the provided `Makefile`
+You can also use the provided `Makefile` to execute life-cycle using Docker
 
 ```bash
-make run
+make help
+
+# Create docker container
+make build
+
+# Run life-cycle activities
+make start.vm
+make stop.vm
 ```
 
 ## Automation
