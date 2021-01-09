@@ -41,7 +41,7 @@ function Start-Vm {
     This respository assumes that you are familiar with the programming language that is being demonstrated and the tools that are used to create and debug procedures.
 
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
 
     )
@@ -67,7 +67,9 @@ function Start-Vm {
             if ($Time.UTCTimeActual -ge $Time.UTCStartTime -and $Time.UTCTimeActual -le $Time.UTCStopTime) {
                 try {
                     Write-Verbose "[$(Get-Date)] Starting VM: $($VM.Name)"
-                    Start-AzVM -Name $VM.Name -ResourceGroupName $VM.ResourceGroupName
+                    if ($pscmdlet.ShouldProcess("Start [${VM.Name}]", $VM.ResourceGroupName)) {
+                        Start-AzVM -Name $VM.Name -ResourceGroupName $VM.ResourceGroupName
+                    }
                 }
                 catch {
                     Write-Error "[$(Get-Date)] Unable to start VM: $($VM.Name)"
