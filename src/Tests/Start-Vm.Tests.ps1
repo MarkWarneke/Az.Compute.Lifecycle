@@ -1,24 +1,18 @@
-BeforeAll {
-    # . $PSCommandPath.Replace('.Tests.ps1', '.ps1')
+# Load module and dependencies
+. "$PSScriptRoot\_shared.ps1"
 
-    $ModuleFile = (Get-Item $PSScriptRoot).Parent
-    $ModuleName = $ModuleFile.BaseName
- 
-    $testDate = Get-Date -Hour 9    
-    Import-Module $ModuleFile.FullName
-}
-
+InModuleScope $ModuleName {
 
     Describe "Start-Vm" {
 
         BeforeAll {
-        
+            $testDate = Get-Date -Hour 9
             Mock Get-Date { $testDate }  -ParameterFilter { $date -eq $null }
         }
 
         Context "given VMs that should start" -Foreach @(
             @{
-                testcase = @( 
+                testcase = @(
                     @{
                         Name              = "Test VM"
                         ResourceGroupName = "test_vm"
@@ -44,19 +38,17 @@ BeforeAll {
                         }
                         PowerState        = "VM deallocated"
                     }
-                ) 
+                )
             }
 
         ) {
 
             BeforeEach {
-                Mock Start-AzVM  -Verifiable { $true }
-                Mock Get-AzVM { 
+                Mock Start-AzVM  -Verifiable { $true }  -ModuleName 'Az.Compute.LifeCycle'
+                Mock Get-AzVM {
                     return $testcase
-                }
-                InModuleScope 'Az.Compute.LifeCycle' {
-                    $result = Start-Vm
-                }
+                }  -ModuleName 'Az.Compute.LifeCycle'
+                $result = Start-Vm
             }
 
             It "should start vm" {
@@ -136,17 +128,16 @@ BeforeAll {
             }
         ) {
             BeforeEach {
-                Mock Start-AzVM  -Verifiable { $true }
-                Mock Get-AzVM { 
+                Mock Start-AzVM  -Verifiable { $true }  -ModuleName 'Az.Compute.LifeCycle'
+                Mock Get-AzVM {
                     return $testcase
-                }
-                InModuleScope 'Az.Compute.LifeCycle' {
-                    $result = Start-Vm
-                }
+                }  -ModuleName 'Az.Compute.LifeCycle'
+                $result = Start-Vm
             }
             It "should not start vm" {
                 Assert-MockCalled Start-AzVM  -Exactly 0
             }
 
-        }      
+        }
     }
+}
