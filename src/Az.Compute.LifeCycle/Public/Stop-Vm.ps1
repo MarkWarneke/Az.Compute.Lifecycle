@@ -63,14 +63,17 @@ function Stop-Vm {
 
             $Time = Get-TimeFromTags -Tags $VM.Tags
 
-            $UTCStopTime = $Time.UTCStopTime
-            $UTCTimeActual = $Time.UTCTimeActual
+            $UTCTimeActual = $Time.UTCTimeActual # TODO: Rename to current
+            $UTCStopTime = $Time.UTCStopTime # TODO: Rename to POWER_OFF time
+            $ActualOffsetDateFormated = $Time.ActualOffsetDateFormated  # TODO: Refactor to something less ambigous, because of the day increase (e.g. 24h + 1)
 
-            $ActualOffsetDateFormated = $Time.ActualOffsetDateFormated
+            # TODO: Make sense of this stuff.. I don't know what this should do.
             $ShutDownDateExclusionFormated = $Time.ShutDownDateExclusionFormated
             $ShutDownDateFormated = $Time.ShutDownDateFormated
 
-            if ($ActualOffsetDateFormated -gt $ShutDownDateFormated -or $ActualOffsetDateFormated -lt $ShutDownDateExclusionFormated) {
+            # TODO: Validate what is going on here.
+            if ($ActualOffsetDateFormated -gt $ShutDownDateFormated -or
+                $ActualOffsetDateFormated -lt $ShutDownDateExclusionFormated) {
                 if ($UTCTimeActual -ge $UTCStopTime) {
                     Write-Verbose "[$(Get-Date)] Shutting down VM: $($VM.Name)"
                     if ($pscmdlet.ShouldProcess("Stop [${VM.Name}]", $VM.ResourceGroupName)) {

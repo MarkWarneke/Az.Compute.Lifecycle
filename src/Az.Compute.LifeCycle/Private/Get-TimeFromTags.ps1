@@ -35,14 +35,18 @@ function Get-TimeFromTags {
         Write-Verbose "[$(Get-Date)] Start Time (UTC) is $UTCStartTime"
 
         # Get Date for Date exclusions
-        $UTCOffsetDate = [INT]$Tags['PowerOnOffUTCOffset']
-        [STRING]$ShutDownExclusion = $Tags['PowerOffExcludeDates']
+
+        # TODO: Clean up this mess
+        $UTCOffsetDate = [INT]$Tags['PowerOnOffUTCOffset'] # TODO: Rename variable to UtcOffset...
+        [STRING]$ShutDownExclusion = $Tags['PowerOffExcludeDate']
         if (!$ShutDownExclusion) {
             [DateTime]$ShutDownExclusionFormated = "01/01/1990"
         }
         else {
             [DateTime]$ShutDownExclusionFormated = $ShutDownExclusion
         }
+
+        # TODO: Rename those variables and create some sense here.
         $ActualOffsetDate = (Get-Date).AddHours($UTCOffsetDate)
         $ActualOffsetDateFormated = Get-Date -Date $ActualOffsetDate -Format "MM/dd/yyyy"
         $ShutDownDateExclusionFormated = Get-Date -Date $ShutDownExclusionFormated -Format "MM/dd/yyyy"
