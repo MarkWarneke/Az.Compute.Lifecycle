@@ -2,8 +2,8 @@
 
 Create a solution to save costs for dev environments e.g.
 
-- automatic shutdown of VMSS during evenings & weekends for dev/tests
-- automatic scaling of VMSS to reduce to smaller footprint and save costs
+- automatic shutdown of VMs & VMSS during evenings & weekends for dev/tests
+- automatic scaling of VMs & VMSS to reduce to smaller footprint and save costs
 
 Create an executable that to certain times deallocate compute resources and start them again.
 
