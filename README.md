@@ -11,14 +11,14 @@ Use the run command to execute the functionality.
 To start the VMs run:
 
 ```bash
-./run.ps1 
+./run.ps1
 ```
 
 to stop the vms run:
 
 
 ```bash
-./run.ps1 -stop 
+./run.ps1 -stop
 ```
 
 You can also use the provided `Makefile`
@@ -45,7 +45,7 @@ Name                 Value
             PowerOffTime         20:00
             ManuallyStopped      False
             PowerOnTime          08:00
-            PowerOnOffUTCOffset  0 
+            PowerOnOffUTCOffset  0
 ```
 
 After that the life cycle activities will `Start-Vm` or `Stop-Vm` based on the tags.
@@ -54,9 +54,7 @@ After that the life cycle activities will `Start-Vm` or `Stop-Vm` based on the t
 
 ```powershell
 
-. ./src/Set-Tags.ps1
-. ./src/Start-Vm.ps1
-. ./src/Stop-Vm.ps1
+Import-Module (Join-Path $PSScriptRoot 'src' 'Az.Compute.LifeCycle') -Force
 
 Get-Help Set-Tags
 Get-Help Start-Vm

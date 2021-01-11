@@ -2,7 +2,7 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -29,7 +29,7 @@ jobs:
         run: |
           Write-host $PSVersionTable.PSVersion.Major $PSVersionTable.PSRemotingProtocolVersion.Minor
           Set-PSRepository psgallery -InstallationPolicy trusted
-          Install-Module -Name Pester, Az -confirm:$false -Force
+          Install-Module -Name Pester, Az, PSScriptAnalyzer -confirm:$false -Force
 
           Invoke-Pester . -CI
 
