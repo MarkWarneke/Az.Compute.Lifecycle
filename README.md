@@ -2,8 +2,8 @@
 
 Create a solution to save costs for dev environments e.g.
 
-- automatic shutdown of VMs & VMSS (#3) during evenings & weekends for dev/tests
-- automatic scaling of VMs & VMSS (#3) to reduce to smaller footprint and save costs
+- automatic shutdown of VMs & VMSS ([#3](https://github.com/MarkWarneke/Az.Compute.Lifecycle/issues/3)) during evenings & weekends for dev/tests
+- automatic scaling of VMs & VMSS ([#3](https://github.com/MarkWarneke/Az.Compute.Lifecycle/issues/3)) to reduce to smaller footprint and save costs
 
 Create an executable that to certain times deallocate compute resources and start them again.
 
